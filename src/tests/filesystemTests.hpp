@@ -1,6 +1,6 @@
 #pragma once
 #include "unittests.hpp"
-#include "../code-analysis/codeAnalysis.hpp"
+#include "codeAnalysis.hpp"
 
 
 inline bool projectAnalysisTest()

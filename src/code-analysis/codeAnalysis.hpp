@@ -1,5 +1,5 @@
 #pragma once
-#include "filesUtils.hpp"
+#include "isbell.hpp"
 
 
 
@@ -21,22 +21,14 @@ class CppCodeFile : public CodeFileDescriptor {
 
 public:
 	explicit CppCodeFile(const Path &path);
-	string getExtension() const;
+
+	string extension() const;
 	CppExtension getCppExtension() const;
 	bool header() const;
 	bool cCompatible() const;
 	string filename() const;
 };
 
-
-struct CppMacro {
-	string identifier;
-	vector<string> parameters;
-	bool dots;
-	string replacement;
-
-	CppMacro(const string &id, const vector<string> &params, const string &rep, bool dots = false);
-};
 
 
 class CppProject {
@@ -47,4 +39,13 @@ public:
 
 	static vector<CppCodeFile> listAllCppFiles(const vector<DirectoryDescriptor> &excludeDirs, const DirectoryDescriptor &subdir);
 	vector<CppCodeFile> listAllCppFiles(const vector<DirectoryDescriptor> &excludeDirs) const;
+};
+
+class CppCode {
+	CppExtension ext;
+	string code;
+
+public:
+	explicit CppCode(const string &code, CppExtension ext) : code(code), ext(ext) {}
+
 };

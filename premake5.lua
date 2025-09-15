@@ -22,8 +22,7 @@ if not config then error("Failed to read/parse config file: " .. configFile) end
 local dialect = config.cpp_dialect or "C++23"
 local project_dirs = config.projects_dir or "src"
 
-local selectedScene = _OPTIONS["scene"]
-if not selectedScene then error("Missing --scene. Usage: premake5 --scene=MyScene cmake|gmake2") end
+local selectedScene = _OPTIONS["scene"] or "main"
 
 local scenePath = path.join(project_dirs, selectedScene .. ".cpp")
 if not os.isfile(scenePath) then error("Scene source not found: " .. scenePath) end
@@ -31,21 +30,26 @@ if not os.isfile(scenePath) then error("Scene source not found: " .. scenePath) 
 startproject(selectedScene)
 
 local outdir = selectedScene .. "/build-%{cfg.architecture}"
+local isbell_dir = "external/isbell/src/isbell"
 
 local inc = {
-    ".",
-    "external/engine",
-    "external/engine/utils",
-    "external/engine/engine",
-    "external/engine/geometry",
-    "external/engine/physics",
-    "external/engine/utils/file-management",
+    isbell_dir,
+    isbell_dir .. "/utils",
+    isbell_dir .. "/engine",
+    isbell_dir .. "/geometry",
+    isbell_dir .. "/physics",
+    isbell_dir .. "/openglAPI",
+    isbell_dir .. "/file-management",
+    isbell_dir .. "/include",
     "external/glew-2.1.0/include",
     "external/glfw-3.4/include",
     "external/glm-0.9.1.7",
     "external/spdlog-1.x/include",
+    "external/nuklear/include",
     "src",
     "src/code-analysis",
+    "src/gui",
+    "src/tests",
 }
 
 -- Use a more readable format for Windows system libraries
@@ -73,16 +77,17 @@ project "engine"
     objdir    ("build/engine-build/%{cfg.architecture}/obj")
 
     files {
-        "external/engine/**.hpp",
-        "external/engine/**.cpp",
+        isbell_dir .. "/**.hpp",
+        isbell_dir .. "/**.cpp",
+
         "external/glew-2.1.0/src/glew.c",
         "external/glfw-3.4/src/**.c",
         "external/glm-0.9.7.1/glm/**.hpp",
-
+        "external/nuklear/include/*.h",
     }
 
     removefiles {
-        "external/engine/**_dep.**",
+        isbell_dir .. "/**_dep.**",
     }
 
     includedirs(inc)
@@ -179,8 +184,8 @@ project "unitTests"
     targetdir ("build/tests/bin/build-%{cfg.architecture}")
     objdir    ("build/tests/obj/build-%{cfg.architecture}")
 
-    files { "src/**.hpp",
-            "src/**.cpp"
+    files { "src/tests/**.hpp",
+            "src/tests/**.cpp"
     }
 
     removefiles {

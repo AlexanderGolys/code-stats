@@ -1,0 +1,3 @@
+[submodule "external/isbell"]
+	path = external/isbell
+	url = https://github.com/AlexanderGolys/isbell-engine.git

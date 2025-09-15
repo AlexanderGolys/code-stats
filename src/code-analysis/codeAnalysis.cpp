@@ -24,15 +24,15 @@ bool isCppExtension(const string &extStr) {
 }
 
 CppCodeFile::CppCodeFile(const Path &path)
-: CodeFileDescriptor(path, false)
+: CodeFileDescriptor(path, false), ext(CPP), isHeader(false), isCCompatible(false)
 {
-	auto extStr = this->extension();
-	ext = extensionFromString(extStr);
+	ext = extensionFromString(this->extension());
 	isHeader = isHeaderExtension(ext);
 	isCCompatible = isCompatibleWithC(ext);
 }
 
-string CppCodeFile::getExtension() const {
+
+string CppCodeFile::extension() const {
 	return extension();
 }
 
@@ -53,8 +53,7 @@ string CppCodeFile::filename() const {
 }
 
 
-CppProject::CppProject(const Path &rootPath)
-: root(rootPath)
+CppProject::CppProject(const Path &rootPath): root(rootPath)
 {
 	if (!root.exists())
 		throw FileSystemError("Project root directory " + rootPath.to_str() + " does not exist.", __FILE__, __LINE__);
