@@ -1,3 +1,3 @@
 @echo off
-git submodule update --init --recursive
-.\premake5 --scene=main cmake
+git submodule update --remote --recursive
+.\premake\premake5 --scene=main cmake
